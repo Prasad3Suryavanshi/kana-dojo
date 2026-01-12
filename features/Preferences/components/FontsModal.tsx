@@ -1,11 +1,12 @@
 'use client';
 
 import fonts from '@/features/Preferences/data/fonts';
+import { isRecommendedFont } from '@/features/Preferences/data/recommendedFonts';
 import usePreferencesStore from '@/features/Preferences/store/usePreferencesStore';
 import { useClick } from '@/shared/hooks/useAudio';
 import * as DialogPrimitive from '@radix-ui/react-dialog';
-import { X } from 'lucide-react';
-import { memo, useCallback } from 'react';
+import { X, BookOpen, Sparkles } from 'lucide-react';
+import { memo, useCallback, useMemo } from 'react';
 import clsx from 'clsx';
 
 interface FontsModalProps {
@@ -55,6 +56,13 @@ export default function FontsModal({ open, onOpenChange }: FontsModalProps) {
   const selectedFont = usePreferencesStore(state => state.font);
   const setSelectedFont = usePreferencesStore(state => state.setFont);
 
+  // Separate fonts into recommended and other categories
+  const { recommendedFonts, otherFonts } = useMemo(() => {
+    const recommended = fonts.filter(f => isRecommendedFont(f.name));
+    const other = fonts.filter(f => !isRecommendedFont(f.name));
+    return { recommendedFonts: recommended, otherFonts: other };
+  }, []);
+
   const handleFontClick = useCallback(
     (fontName: string) => {
       playClick();
@@ -93,17 +101,60 @@ export default function FontsModal({ open, onOpenChange }: FontsModalProps) {
             </button>
           </div>
           <div id='modal-scroll' className='flex-1 overflow-y-auto px-6 py-6'>
-            <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
-              {fonts.map(fontObj => (
-                <FontCard
-                  key={fontObj.name}
-                  fontName={fontObj.name}
-                  fontClassName={fontObj.font.className}
-                  isSelected={selectedFont === fontObj.name}
-                  isDefault={fontObj.name === 'Zen Maru Gothic'}
-                  onClick={handleFontClick}
-                />
-              ))}
+            {/* Recommended Fonts Section */}
+            <div className='mb-6'>
+              <div className='mb-3 flex items-center gap-2'>
+                <BookOpen size={18} className='text-[var(--success-color)]' />
+                <h3 className='text-lg font-semibold text-[var(--main-color)]'>
+                  Recommended for Learning
+                </h3>
+                <span className='text-sm text-[var(--secondary-color)]'>
+                  ({recommendedFonts.length})
+                </span>
+              </div>
+              <p className='mb-4 text-sm text-[var(--secondary-color)]'>
+                Used in real Japanese textbooks, books & media
+              </p>
+              <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+                {recommendedFonts.map(fontObj => (
+                  <FontCard
+                    key={fontObj.name}
+                    fontName={fontObj.name}
+                    fontClassName={fontObj.font.className}
+                    isSelected={selectedFont === fontObj.name}
+                    isDefault={fontObj.name === 'Zen Maru Gothic'}
+                    onClick={handleFontClick}
+                  />
+                ))}
+              </div>
+            </div>
+
+            {/* Other Fonts Section */}
+            <div>
+              <div className='mb-3 flex items-center gap-2'>
+                <Sparkles size={18} className='text-[var(--secondary-color)]' />
+                <h3 className='text-lg font-semibold text-[var(--main-color)]'>
+                  Other Fonts
+                </h3>
+                <span className='text-sm text-[var(--secondary-color)]'>
+                  ({otherFonts.length})
+                </span>
+              </div>
+              <p className='mb-4 text-sm text-[var(--secondary-color)]'>
+                Fun & decorative fonts for entertainment
+              </p>
+              <div className='grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3'>
+                {otherFonts.map(fontObj => (
+                  <FontCard
+                    key={fontObj.name}
+                    fontName={fontObj.name}
+                    fontClassName={fontObj.font.className}
+                    isSelected={selectedFont === fontObj.name}
+                    isDefault={fontObj.name === 'Zen Maru Gothic'}
+                    onClick={handleFontClick}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </DialogPrimitive.Content>

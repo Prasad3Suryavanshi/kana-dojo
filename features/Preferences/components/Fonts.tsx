@@ -1,11 +1,12 @@
 'use client';
 import clsx from 'clsx';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 import { useClick } from '@/shared/hooks/useAudio';
 import usePreferencesStore from '@/features/Preferences/store/usePreferencesStore';
 import { buttonBorderStyles } from '@/shared/lib/styles';
 import fonts from '../data/fonts';
-import { Dice5 } from 'lucide-react';
+import { isRecommendedFont } from '../data/recommendedFonts';
+import { Dice5, BookOpen, Sparkles } from 'lucide-react';
 import { Random } from 'random-js';
 
 const random = new Random();
@@ -20,13 +21,51 @@ const Fonts = () => {
     fonts.length > 0 ? fonts[random.integer(0, fonts.length - 1)] : null
   );
 
+  // Separate fonts into recommended and other categories
+  const { recommendedFonts, otherFonts } = useMemo(() => {
+    const recommended = fonts.filter(f => isRecommendedFont(f.name));
+    const other = fonts.filter(f => !isRecommendedFont(f.name));
+    return { recommendedFonts: recommended, otherFonts: other };
+  }, []);
+
+  const renderFontCard = (fontObj: (typeof fonts)[number]) => (
+    <label
+      key={fontObj.name}
+      className={clsx(
+        'flex items-center justify-center',
+        buttonBorderStyles,
+        'border-1 border-[var(--card-color)] px-4 py-4',
+        'flex-1 overflow-hidden',
+        fontObj.name === currentFont && 'border-[var(--main-color)]'
+      )}
+      onClick={() => playClick()}
+    >
+      <input
+        type='radio'
+        name='selectedTheme'
+        onChange={() => {
+          setFont(fontObj.name);
+        }}
+        className='hidden'
+      />
+      <p className={clsx('text-center text-xl', fontObj.font.className)}>
+        <span className='text-[var(--secondary-color)]'>
+          {fontObj.name === currentFont ? '\u2B24 ' : ''}
+        </span>
+        <span className=''>{fontObj.name}</span>
+        {fontObj.name === 'Zen Maru Gothic' && ' (default)'}
+        <span className='ml-2 text-[var(--secondary-color)]'>かな道場</span>
+      </p>
+    </label>
+  );
+
   return (
-    <div className='flex flex-col gap-4'>
+    <div className='flex flex-col gap-6'>
       <button
         className={clsx(
-          'p-6 flex justify-center items-center gap-2 w-1/4',
+          'flex w-1/4 items-center justify-center gap-2 p-6',
           buttonBorderStyles,
-          'text-xl w-full',
+          'w-full text-xl',
           'flex-1 overflow-hidden'
         )}
         onClick={() => {
@@ -45,42 +84,51 @@ const Fonts = () => {
         Random Font
       </button>
 
-      <fieldset
-        className={clsx('grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4')}
-      >
-        {fonts.map((fontObj: (typeof fonts)[number]) => (
-          <label
-            key={fontObj.name}
-            className={clsx(
-              'flex justify-center items-center',
-              buttonBorderStyles,
-              'py-4 px-4 border-[var(--card-color)] border-1',
-              'flex-1 overflow-hidden',
-              fontObj.name === currentFont && 'border-[var(--main-color)]'
-            )}
-            onClick={() => playClick()}
-          >
-            <input
-              type='radio'
-              name='selectedTheme'
-              onChange={() => {
-                setFont(fontObj.name);
-              }}
-              className='hidden'
-            />
-            <p className={clsx('text-center text-xl', fontObj.font.className)}>
-              <span className='text-[var(--secondary-color)]'>
-                {fontObj.name === currentFont ? '\u2B24 ' : ''}
-              </span>
-              <span className=''>{fontObj.name}</span>
-              {fontObj.name === 'Zen Maru Gothic' && ' (default)'}
-              <span className='ml-2 text-[var(--secondary-color)]'>
-                かな道場
-              </span>
-            </p>
-          </label>
-        ))}
-      </fieldset>
+      {/* Recommended Fonts Section */}
+      <div className='flex flex-col gap-3'>
+        <div className='flex items-center gap-2'>
+          <BookOpen size={20} className='text-[var(--success-color)]' />
+          <h3 className='text-xl font-semibold text-[var(--main-color)]'>
+            Recommended for Learning
+          </h3>
+          <span className='text-sm text-[var(--secondary-color)]'>
+            ({recommendedFonts.length})
+          </span>
+        </div>
+        <p className='-mt-1 text-sm text-[var(--secondary-color)]'>
+          Used in real Japanese textbooks, books & media
+        </p>
+        <fieldset
+          className={clsx(
+            'grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4'
+          )}
+        >
+          {recommendedFonts.map(renderFontCard)}
+        </fieldset>
+      </div>
+
+      {/* Other Fonts Section */}
+      <div className='flex flex-col gap-3'>
+        <div className='flex items-center gap-2'>
+          <Sparkles size={20} className='text-[var(--secondary-color)]' />
+          <h3 className='text-xl font-semibold text-[var(--main-color)]'>
+            Other Fonts
+          </h3>
+          <span className='text-sm text-[var(--secondary-color)]'>
+            ({otherFonts.length})
+          </span>
+        </div>
+        <p className='-mt-1 text-sm text-[var(--secondary-color)]'>
+          Fun & decorative fonts for entertainment
+        </p>
+        <fieldset
+          className={clsx(
+            'grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4'
+          )}
+        >
+          {otherFonts.map(renderFontCard)}
+        </fieldset>
+      </div>
       <div className='flex flex-col gap-2'>
         <h4 className='text-xl'>Hiragana:</h4>
         <p className='text-3xl text-[var(--secondary-color)]' lang='ja'>
