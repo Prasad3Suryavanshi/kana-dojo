@@ -519,7 +519,8 @@ jobs:
               repo: context.repo.repo,
               title: issueTitle,
               body: issueBody,
-              labels: labels
+              labels: labels,
+              type: 'Task'
             });
 
             console.log(`Created issue #${response.data.number}: ${issueTitle}`);
