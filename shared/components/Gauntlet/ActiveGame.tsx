@@ -414,7 +414,7 @@ export default function ActiveGame<T>({
         {/* Progress Display */}
         <div className='flex items-center gap-2 text-sm text-(--muted-color)'>
           <span>
-            {currentIndex + 1} / {totalQuestions}
+            {currentIndex} / {totalQuestions}
           </span>
         </div>
 
@@ -430,10 +430,7 @@ export default function ActiveGame<T>({
                     className='fill-(--main-color) text-(--main-color)'
                   />
                 ) : (
-                  <HeartCrack
-                    size={24}
-                    className='text-(--border-color)'
-                  />
+                  <HeartCrack size={24} className='text-(--border-color)' />
                 )}
               </div>
             );
@@ -443,7 +440,7 @@ export default function ActiveGame<T>({
 
       {/* Progress Bar */}
       <div className='mt-4 w-full md:w-2/3 lg:w-1/2'>
-        <ProgressBar />
+        <ProgressBar value={currentIndex} max={totalQuestions} />
       </div>
 
       {/* Main Game Area - EXACTLY matching WordBuildingGame */}

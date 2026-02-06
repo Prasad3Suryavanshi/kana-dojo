@@ -401,7 +401,7 @@ export default function Gauntlet<T>({ config, onCancel }: GauntletProps<T>) {
   }, []);
 
   const advanceToNextQuestion = useCallback(
-    (newLives: number) => {
+    (newLives: number, wasCorrect: boolean, newCorrectAnswers: number) => {
       setUserAnswer('');
       setWrongSelectedAnswers([]);
       setLastAnswerCorrect(null);
@@ -411,12 +411,33 @@ export default function Gauntlet<T>({ config, onCancel }: GauntletProps<T>) {
         return;
       }
 
-      if (currentIndex + 1 >= totalQuestions) {
-        endGame(true);
-        return;
+      if (wasCorrect) {
+        // Check if all questions have been answered correctly
+        if (newCorrectAnswers >= totalQuestions) {
+          endGame(true);
+          return;
+        }
+        // Move to the next question in the queue
+        setCurrentIndex(prev => prev + 1);
+      } else {
+        // Wrong answer: re-queue this question at a random later position
+        // so the user must answer it correctly to complete the gauntlet
+        setQuestionQueue(prev => {
+          const newQueue = [...prev];
+          const failedQuestion = { ...newQueue[currentIndex] };
+          // Insert at a random position between currentIndex+1 and end of queue
+          const remainingLength = newQueue.length - (currentIndex + 1);
+          const insertOffset =
+            remainingLength > 0
+              ? random.integer(1, Math.max(1, Math.min(remainingLength, 5)))
+              : 1;
+          const insertPos = currentIndex + insertOffset;
+          newQueue.splice(insertPos, 0, failedQuestion);
+          return newQueue;
+        });
+        // Still advance past the current slot (the re-queued copy is ahead)
+        setCurrentIndex(prev => prev + 1);
       }
-
-      setCurrentIndex(prev => prev + 1);
     },
     [currentIndex, endGame, totalQuestions],
   );
@@ -449,6 +470,8 @@ export default function Gauntlet<T>({ config, onCancel }: GauntletProps<T>) {
           },
         }));
 
+        const newCorrectAnswers = correctAnswers + 1;
+
         const canRegen = DIFFICULTY_CONFIG[difficulty].regenerates;
         if (canRegen && lives < maxLives) {
           const newCorrectSinceRegen = correctSinceLastRegen + 1;
@@ -463,7 +486,7 @@ export default function Gauntlet<T>({ config, onCancel }: GauntletProps<T>) {
           }
         }
 
-        advanceToNextQuestion(lives);
+        advanceToNextQuestion(lives, true, newCorrectAnswers);
         return;
       }
 
@@ -487,11 +510,12 @@ export default function Gauntlet<T>({ config, onCancel }: GauntletProps<T>) {
       setLifeJustLost(true);
       setTimeout(() => setLifeJustLost(false), 500);
 
-      advanceToNextQuestion(newLives);
+      advanceToNextQuestion(newLives, false, correctAnswers);
     },
     [
       advanceToNextQuestion,
       bestStreak,
+      correctAnswers,
       correctSinceLastRegen,
       currentQuestion,
       difficulty,
@@ -607,7 +631,7 @@ export default function Gauntlet<T>({ config, onCancel }: GauntletProps<T>) {
   return (
     <ActiveGame
       dojoType={dojoType}
-      currentIndex={currentIndex}
+      currentIndex={correctAnswers}
       totalQuestions={totalQuestions}
       lives={lives}
       maxLives={maxLives}
