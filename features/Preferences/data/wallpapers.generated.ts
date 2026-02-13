@@ -6,7 +6,7 @@
  *
  * Each entry corresponds to a source image that was processed into
  * AVIF + WebP at 1920w, 2560w, and 3840w sizes in public/wallpapers/.
- *
+ * 
  * The 2560w size is served by default for optimal quality on modern displays.
  */
 
@@ -27,10 +27,22 @@ export interface GeneratedWallpaper {
  */
 export const GENERATED_WALLPAPERS: GeneratedWallpaper[] = [
   {
+    id: 'bangkok-grand-palace-fireworks',
+    name: 'Bangkok Grand Palace Fireworks',
+    url: '/wallpapers/bangkok-grand-palace-fireworks-2560w.avif',
+    urlWebp: '/wallpapers/bangkok-grand-palace-fireworks-2560w.webp',
+  },
+  {
     id: 'bangkok-night',
     name: 'Bangkok Night',
     url: '/wallpapers/bangkok-night-2560w.avif',
     urlWebp: '/wallpapers/bangkok-night-2560w.webp',
+  },
+  {
+    id: 'bangkok-night-pool',
+    name: 'Bangkok Night Pool',
+    url: '/wallpapers/bangkok-night-pool-2560w.avif',
+    urlWebp: '/wallpapers/bangkok-night-pool-2560w.webp',
   },
   {
     id: 'bangkok-park',
@@ -65,7 +77,7 @@ export const GENERATED_WALLPAPERS: GeneratedWallpaper[] = [
   {
     id: 'retro-city',
     name: 'Retro City',
-    url: '/wallpapers/retro-city-1920w.avif',
-    urlWebp: '/wallpapers/retro-city-1920w.webp',
+    url: '/wallpapers/retro-city-2560w.avif',
+    urlWebp: '/wallpapers/retro-city-2560w.webp',
   },
 ];
