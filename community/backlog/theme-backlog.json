@@ -1909,7 +1909,9 @@
     "mainColor": "oklch(68.0% 0.160 350.0 / 1)",
     "secondaryColor": "oklch(72.0% 0.110 210.0 / 1)",
     "issued": true,
-    "completed": false
+    "completed": true,
+    "completedBy": "hayleytruong",
+    "completedPR": 5550
   },
   {
     "id": "tea-ceramic",
