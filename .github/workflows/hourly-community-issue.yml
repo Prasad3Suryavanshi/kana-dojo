@@ -25,8 +25,8 @@ concurrency:
 
 jobs:
   create-issue:
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
+    runs-on: ubuntu-24.04
+    timeout-minutes: 2
     if: github.repository == 'lingdojo/kana-dojo'
 
     steps:
