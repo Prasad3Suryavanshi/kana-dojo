@@ -82,11 +82,11 @@ export const AchievementCard = ({
               style={
                 isUnlocked
                   ? {
-                      backgroundColor: config.bgColor,
+                      backgroundColor: 'var(--background-color)',
                       color: config.color,
                     }
                   : {
-                      backgroundColor: '#F3F4F6',
+                      backgroundColor: 'var(--background-color)',
                       color: '#9CA3AF',
                     }
               }
