@@ -1,20 +1,17 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, type HTMLMotionProps } from 'framer-motion';
 import { cn } from '@/shared/lib/utils';
 
-interface AuroraTextProps {
+interface AuroraTextProps extends HTMLMotionProps<'span'> {
   children: React.ReactNode;
-  className?: string;
 }
-type AuroraTextSpanProps = AuroraTextProps &
-  React.HTMLAttributes<HTMLSpanElement>;
 
 const AuroraText = ({
   children,
   className,
   ...props
-}: AuroraTextSpanProps) => {
+}: AuroraTextProps) => {
   return (
     <motion.span
       {...props}
