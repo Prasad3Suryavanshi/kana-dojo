@@ -117,7 +117,7 @@
     "kigo": "Frog (kaeru)",
     "notes": "Humorous encouragement and compassion in Issa's voice.",
     "issued": false,
-    "completed": false
+    "completed": true
   },
   {
     "id": 11,
@@ -128,7 +128,7 @@
     "season": "Autumn",
     "kigo": "Deep autumn (aki fukaki)",
     "notes": "Evokes solitude and curiosity.",
-    "issued": false,
+    "issued": true,
     "completed": false
   },
   {
