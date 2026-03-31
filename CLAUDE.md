@@ -4,13 +4,14 @@ This file provides comprehensive guidance for AI coding assistants (GitHub Copil
 
 ---
 
-**Never use `npm run build` for verification** â€” it takes 1-2 minutes and adds no validation value.
+**Never use `npm run build` for verification** — it takes 1-2 minutes and adds no validation value.
 
 ---
 
 ## Shell Environment
 
-**Windows PowerShell**: use `;` â€” **Linux/macOS/WSL**: use `&&`.
+**Windows PowerShell**: use `;` 
+**Linux/macOS/WSL**: use `&&`
 
 <!-- examples commented out: `npm run lint; npm run test` -->
 
@@ -35,7 +36,7 @@ This file provides comprehensive guidance for AI coding assistants (GitHub Copil
 
 ## Architecture - feature-based (short)
 
-KanaDojo is organized by feature: app/, features/, shared/, core/. Keep business logic inside features and avoid cross-feature internal imports.
+KanaDojo is organised by feature: app/, features/, shared/, core/. Keep business logic inside features and avoid cross-feature internal imports.
 
 ---
 
